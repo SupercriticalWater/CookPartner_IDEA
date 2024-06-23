@@ -11,7 +11,7 @@
  Target Server Version : 80200
  File Encoding         : 65001
 
- Date: 23/06/2024 01:26:46
+ Date: 23/06/2024 17:39:26
 */
 
 SET NAMES utf8mb4;
@@ -51,8 +51,8 @@ CREATE TABLE `food_like`  (
   `l_time` timestamp NOT NULL COMMENT '关注时间',
   PRIMARY KEY (`u_id`, `f_id`) USING BTREE,
   INDEX `f_id`(`f_id`) USING BTREE,
-  CONSTRAINT `food_like_ibfk_2` FOREIGN KEY (`f_id`) REFERENCES `food` (`f_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `food_like_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `food_like_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `food_like_ibfk_2` FOREIGN KEY (`f_id`) REFERENCES `food` (`f_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -75,8 +75,8 @@ CREATE TABLE `moment`  (
   PRIMARY KEY (`m_id`) USING BTREE,
   INDEX `u_id`(`u_id`) USING BTREE,
   INDEX `f_id`(`f_id`) USING BTREE,
-  CONSTRAINT `moment_ibfk_2` FOREIGN KEY (`f_id`) REFERENCES `food` (`f_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `moment_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `moment_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `moment_ibfk_2` FOREIGN KEY (`f_id`) REFERENCES `food` (`f_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
@@ -90,19 +90,23 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `u_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户号',
   `u_pwd` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户密码（仅安卓端使用）',
-  `u_url` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '未命名用户' COMMENT '头像',
-  `u_nickname` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '昵称',
+  `u_url` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '头像',
+  `u_nickname` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '未命名用户' COMMENT '昵称',
   `u_gender` int NOT NULL DEFAULT 2 COMMENT '性别',
   `u_hobby` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '未设置' COMMENT '偏好',
   `u_score` int NOT NULL DEFAULT 0 COMMENT '积分',
   `u_level` int NOT NULL DEFAULT 1 COMMENT '等级',
   `u_signature` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '无' COMMENT '个性签名',
   PRIMARY KEY (`u_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+INSERT INTO `user` VALUES ('test', 'test', 'avatarhh', 'Alina', 2, '未设置', 0, 1, '无');
+INSERT INTO `user` VALUES ('test1', 'test1', 'avatar', 'Water', 2, '未设置', 0, 1, '无');
+INSERT INTO `user` VALUES ('test1111111', 'testandroid', 'avatar_android', 'WaterAn', 2, '未设置', 0, 1, '无');
+INSERT INTO `user` VALUES ('testsign111', 'testsignpwd', NULL, '未命名用户', 2, '未设置', 0, 1, '无');
 
 -- ----------------------------
 -- Table structure for user_food
@@ -116,10 +120,10 @@ CREATE TABLE `user_food`  (
   PRIMARY KEY (`u_id`, `f_id`) USING BTREE,
   INDEX `f_id`(`f_id`) USING BTREE,
   INDEX `f_category`(`f_category`) USING BTREE,
+  CONSTRAINT `user_food_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_food_ibfk_2` FOREIGN KEY (`f_id`) REFERENCES `food` (`f_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `user_food_ibfk_3` FOREIGN KEY (`f_category`) REFERENCES `food` (`f_category`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `user_food_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+  CONSTRAINT `user_food_ibfk_3` FOREIGN KEY (`f_category`) REFERENCES `food` (`f_category`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user_food
