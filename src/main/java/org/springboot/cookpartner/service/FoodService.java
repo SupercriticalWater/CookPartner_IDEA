@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.springboot.cookpartner.entity.Food;
 import org.springboot.cookpartner.mapper.FoodMapper;
@@ -21,9 +22,36 @@ public class FoodService extends ServiceImpl<FoodMapper, Food>{
     @Resource
     private FoodMapper foodMapper;
 
-    public List<Food> findAllGoods() {
+    public List<Map<String, Object>> findAllFoods() {
         return foodMapper.findAllFoods();
     }
+
+    public Map<String, Object> findFoodByFid(int fid) {
+        return foodMapper.findFoodByFid(fid);
+    }
+
+    public List<Map<String, Object>> findAllFoods_Like() {
+        return foodMapper.findAllFoods_Like();
+    }
+
+    public List<Map<String, Object>> findAllFoods_Make() {
+        return foodMapper.findAllFoods_make();
+    }
+
+    public List<Map<String, Object>> findAllFoods_Time() {
+        return foodMapper.findAllFoods_time();
+    }
+
+    public List<Map<String, Object>> findFrontFoods() {
+        return foodMapper.findFrontFoods();
+    }
+
+    public List<Map<String, Object>> findFoodByType(int tid) {
+        return foodMapper.findFoodByType(tid);
+    }
+
+
+
 
 
 }
