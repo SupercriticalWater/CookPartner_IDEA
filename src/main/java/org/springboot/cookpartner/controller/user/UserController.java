@@ -1,5 +1,6 @@
 package org.springboot.cookpartner.controller.user;
 
+import org.springboot.cookpartner.utils.JsonMessageGetter;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.controller.message.Message;
 import org.springboot.cookpartner.service.UserService;
@@ -30,6 +31,18 @@ public class UserController {
         } else
             //Android-login
             return userService.login(openid, password);
+    }
+    @GetMapping("/version")
+    public String getVersion() {
+
+        Map<String, Object> objectMap = JsonMessageGetter.readJsonFile(MyConfig.RESOURCE_PATH + "myconfig.json");
+
+        String version;
+        if (objectMap != null && objectMap.containsKey("version"))
+            version = objectMap.get("version").toString();
+        else
+            version = "1";
+        return "{\"openid\":\"user0005\",\"version\":\""+version+"\"}";
     }
     //注册
     @GetMapping("/sign")

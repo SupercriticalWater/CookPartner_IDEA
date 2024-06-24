@@ -3,7 +3,7 @@ import lombok.Data;
 
 @Data
 public class Food {
-    String f_id; //菜谱编号
+    Long f_id; //菜谱编号
     String f_name; //菜谱名称
     String f_pic; //菜谱图片
     String f_th_pic; //缩略图
