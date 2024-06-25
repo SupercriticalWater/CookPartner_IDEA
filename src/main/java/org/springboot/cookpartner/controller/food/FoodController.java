@@ -68,6 +68,15 @@ public class FoodController {
         return message;
     }
 
+    @GetMapping("/search")
+    public Map<String,Object> searchFood(
+            @RequestParam(required = false, defaultValue = "") String searchText,
+            @RequestParam(required = false) Integer tid) {
+        Message message = new Message();
+        message.setMessage(foodService.SerchFood(searchText,tid));
+        return message;
+    }
+
 
 
 }

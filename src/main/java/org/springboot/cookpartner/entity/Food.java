@@ -14,7 +14,7 @@ public class Food {
     Long f_id; //菜谱编号
     @TableField("f_name")
     String f_name; //菜谱名称
-    @TableField("f_name")
+    @TableField("f_pic")
     String f_pic; //菜谱图片
     String f_th_pic; //缩略图
     String create_time;//创建时间

@@ -12,6 +12,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.*;
 import org.springboot.cookpartner.controller.message.Message;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 @Service
 public class UserService extends ServiceImpl<UserMapper, User>{
@@ -102,11 +106,13 @@ public class UserService extends ServiceImpl<UserMapper, User>{
     }
     public boolean updateAvatar(String u_id, String url) {
         String url_temp = MyConfig.ADDR + "/img/avatar/" + url + ".jpg";
+        //String url_temp = "/files/" + url + ".jpg";
         return userMapper.updateAvatar(u_id, url_temp);
     }
     public boolean updateSignature(String u_id, String signature) {
         return userMapper.updateSignature(u_id, signature);
     }
+
 
 
 

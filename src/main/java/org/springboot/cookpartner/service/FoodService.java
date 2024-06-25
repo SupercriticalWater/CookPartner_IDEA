@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import cn.hutool.core.util.StrUtil;
 
 @Service
 public class FoodService extends ServiceImpl<FoodMapper, Food>{
@@ -50,8 +51,16 @@ public class FoodService extends ServiceImpl<FoodMapper, Food>{
         return foodMapper.findFoodByType(tid);
     }
 
-
-
+    public List<Map<String, Object>> SerchFood(String searchText,Integer tid) {
+        LambdaQueryWrapper<Food> query = Wrappers.<Food>lambdaQuery().orderByDesc(Food::getF_id);
+        if (StrUtil.isNotBlank(searchText)) {
+            query.like(Food::getF_name, searchText).or().like(Food::getF_description,searchText).or().eq(Food::getF_id,searchText);
+        }
+        if(tid != null){
+            query.eq(Food::getF_category,tid);
+        }
+        return listMaps(query);
+    }
 
 
 }
