@@ -48,6 +48,12 @@ public interface FoodMapper extends BaseMapper<Food> {
     boolean updateNumLike(@Param("f_id") int fid,
                             @Param("num_like") int num_like);
 
+    @Update("update food " +
+            "set num_make = #{num_make} " +
+            "where f_id=#{f_id}")
+    boolean updateNumMake(@Param("f_id") int fid,
+                          @Param("num_make") int num_make);
+
 
 
 }
