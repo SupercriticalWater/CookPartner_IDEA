@@ -33,16 +33,18 @@ public class FoodLikeService {
     public List<Map<String, Object>> findLikeByUser(String uid) {
         return foodLikeMapper.findLikeByUid(uid);
     }
-
-    //点赞
+    public int getRecordNumByUser(String uid) {
+        return foodLikeMapper.getLikeNumByUid(uid);
+    }
+    //收藏
     public Boolean addLike(String uid, int fid) {
         String ltime = DateUtil.now();
 
         try {
-            // 添加点赞记录
+            // 添加收藏记录
             int result = foodLikeMapper.AddLike(uid, fid, ltime);
 
-            // 更新食物的点赞数
+            // 更新食物的收藏数
             if (result != 0) {
                 // 查询食物信息
                 Map<String, Object> food = foodMapper.findFoodByFid(fid);
@@ -51,7 +53,7 @@ public class FoodLikeService {
                     return false;
                 }
 
-                // 更新点赞数
+                // 更新收藏数
                 Long numLikeLong = (Long) food.get("num_like");
                 int numLike = numLikeLong.intValue();
                 int updatedNumLike = numLike + 1;
@@ -64,6 +66,36 @@ public class FoodLikeService {
         } catch (DataAccessException e) {
             // 处理数据库操作异常，可能是触发器引发的唯一性约束冲突
             logger.error("Database error while adding like: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    //取消收藏
+    public Boolean DeleteLike(String uid, int fid) {
+
+        try {
+            // 添加收藏记录
+           // int result = foodLikeMapper.AddLike(uid, fid, ltime);
+            Map<String, Object> foodlike = foodLikeMapper.findLikeByUidAndFid(uid,fid);
+            // 更新食物的收藏数
+            if (foodlike != null) {
+                // 查询食物信息
+                Boolean result = foodLikeMapper.DeleteLike(uid,fid);
+                return result;
+
+                // 更新收藏数
+                // Long numLikeLong = (Long) food.get("num_like");
+                // int numLike = numLikeLong.intValue();
+                // int updatedNumLike = numLike + 1;
+               // boolean updateResult = foodMapper.updateNumLike(fid, updatedNumLike);
+               // return updateResult;
+            } else {
+                logger.error("Failed to foodlike record ");
+                return false;
+            }
+        } catch (DataAccessException e) {
+            // 处理数据库操作异常，可能是触发器引发的唯一性约束冲突
+            logger.error("Database error while Deleting like: {}", e.getMessage());
             return false;
         }
     }

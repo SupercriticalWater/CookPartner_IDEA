@@ -24,11 +24,28 @@ public class FoodLikeController {
         return message;
     }
 
+    @GetMapping("/num/{uid}")
+    public Map<String,Object> getNumByUser(@PathVariable String uid) {
+        Message message = new Message();
+        message.setMessage(foodLikeService.getRecordNumByUser(uid));
+        return message;
+    }
+
     //收藏菜谱
     @GetMapping("/like")
     public Map<String,Object> AddLike(@RequestParam("uid") String uid,@RequestParam("fid") int fid) {
         Message message = new Message();
+        message.setMeta("收藏成功", 200);
         message.setMessage(foodLikeService.addLike(uid,fid));
+        return message;
+    }
+
+    //收藏菜谱
+    @GetMapping("/deletelike")
+    public Map<String,Object> DeleteLike(@RequestParam("uid") String uid,@RequestParam("fid") int fid) {
+        Message message = new Message();
+        message.setMeta("删除成功", 200);
+        message.setMessage(foodLikeService.DeleteLike(uid,fid));
         return message;
     }
 
