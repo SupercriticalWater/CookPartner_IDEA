@@ -33,6 +33,13 @@ public class FoodLikeService {
     public List<Map<String, Object>> findLikeByUser(String uid) {
         return foodLikeMapper.findLikeByUid(uid);
     }
+    public Boolean isLike(String uid, int fid) {
+        Map<String, Object> res = foodLikeMapper.findLikeByUidAndFid(uid,fid);
+        if (res == null){
+            return false;
+        }
+        return true;
+    }
     public int getRecordNumByUser(String uid) {
         return foodLikeMapper.getLikeNumByUid(uid);
     }

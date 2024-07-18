@@ -3,6 +3,7 @@ package org.springboot.cookpartner.controller.food;
 import org.springboot.cookpartner.common.Result;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.controller.message.Message;
+import org.springboot.cookpartner.service.FoodLikeService;
 import org.springboot.cookpartner.service.FoodService;
 import org.springboot.cookpartner.utils.DownloadImg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import java.util.List;
 public class FoodController {
     @Resource
     private FoodService foodService;
+
+    @Resource
+    private FoodLikeService foodLikeService;
 
     //获取所有菜谱-默认排序
     @GetMapping("/all")
@@ -65,6 +69,16 @@ public class FoodController {
     public Map<String,Object> findFoodByFid(@PathVariable int fid) {
         Message message = new Message();
         message.setMessage(foodService.findFoodByFid(fid));
+        return message;
+    }
+
+    @GetMapping("/detail")
+    public Map<String,Object> getFoodDetail(@RequestParam("fid") int fid,
+                                            @RequestParam("uid") String uid ) {
+        Message message = new Message();
+        Map<String,Object> data = foodService.findFoodByFid(fid);
+        data.put("like", foodLikeService.isLike(uid,fid));
+        message.setMessage(data);
         return message;
     }
 
