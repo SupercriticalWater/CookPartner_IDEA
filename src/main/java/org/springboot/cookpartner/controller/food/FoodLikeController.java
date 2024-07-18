@@ -40,7 +40,7 @@ public class FoodLikeController {
         return message;
     }
 
-    //收藏菜谱
+    //取消收藏菜谱
     @GetMapping("/deletelike")
     public Map<String,Object> DeleteLike(@RequestParam("uid") String uid,@RequestParam("fid") int fid) {
         Message message = new Message();
