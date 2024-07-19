@@ -60,4 +60,18 @@ public class MomentController {
         message.setMessage(momentService.deleteMoment(mid));
         return message;
     }
+
+    @GetMapping("/num/uid/{uid}")
+    public Map<String,Object> getNumByUser(@PathVariable String uid) {
+        Message message = new Message();
+        message.setMessage(momentService.getNumByUser(uid));
+        return message;
+    }
+
+    @GetMapping("/num/fid/{fid}")
+    public Map<String,Object> getNumByFood(@PathVariable int fid) {
+        Message message = new Message();
+        message.setMessage(momentService.getNumByFood(fid));
+        return message;
+    }
 }

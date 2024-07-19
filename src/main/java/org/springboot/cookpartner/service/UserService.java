@@ -22,6 +22,15 @@ public class UserService extends ServiceImpl<UserMapper, User>{
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    FoodLikeMapper foodLikeMapper;
+
+    @Autowired
+    MomentMapper momentMapper;
+
+    @Autowired
+    UserFoodMapper userFoodMapper;
+
     public String getOpenid(String temporaryId) {
         RestTemplate template = new RestTemplate();
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=wxcb2253685dc8181e&secret=70520b2c51d10d623de0e6b81011e981&js_code={code}&grant_type=authorization_code";
@@ -56,8 +65,9 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         userMapper.createWxUser(u_id);
        // userRepository.createUser(u_id);
         Map<String, Object> userInfo = userMapper.selectById(u_id);
-        //userInfo.put("moment_num", momentMapper.selectMyMomentTotalNum(u_id));
-        //userInfo.put("follow_num", courseFollowMapper.selectFollowCoursesNumByUid(u_id));
+        userInfo.put("moment_num", momentMapper.getMomentNumByUid(u_id)); //评论数
+        userInfo.put("follow_num", foodLikeMapper.getLikeNumByUid(u_id)); //收藏菜谱数
+        userInfo.put("make_num", userFoodMapper.getRecordNumByUid(u_id)); //制作数
         message.setMeta("SUCCESS", 200);
         message.setMessage(userInfo);
         return message;
