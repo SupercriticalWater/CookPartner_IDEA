@@ -44,6 +44,14 @@ public class MomentService {
         }
     }
 
+    public int getNumByUser(String uid) {
+        return momentMapper.getMomentNumByUid(uid);
+    }
+
+    public int getNumByFood(int fid) {
+        return momentMapper.getMomentNumByFid(fid);
+    }
+
     public List<Map<String, Object>> findMomentByUser(String uid) {
         return momentMapper.findByUid(uid);
     }
