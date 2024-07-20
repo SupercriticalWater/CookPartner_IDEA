@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springboot.cookpartner.entity.Moment;
 import org.springboot.cookpartner.entity.Food;
 import org.springboot.cookpartner.mapper.FoodLikeMapper;
@@ -22,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public class MomentService {
+public class MomentService extends ServiceImpl<MomentMapper, Moment> {
     @Resource
     private MomentMapper momentMapper;
 
@@ -56,6 +60,14 @@ public class MomentService {
         return momentMapper.findByUid(uid);
     }
 
+    public List<Map<String, Object>> findMomentByUserLike(String uid) {
+        return momentMapper.findByUserLike(uid);
+    }
+
+    public List<Map<String, Object>> findAllMoment() {
+        return momentMapper.findAll();
+    }
+
     public Map<String, Object> findMomentByMid(int mid) {
         return momentMapper.findMomentByMid(mid);
     }
@@ -73,6 +85,16 @@ public class MomentService {
             logger.error("Database error while deleting moment: {}", e.getMessage());
             return false;
         }
+    }
+
+    //评论-模糊查询
+    public List<Map<String, Object>> SerchMoment(String searchText) {
+        LambdaQueryWrapper<Moment> query = Wrappers.<Moment>lambdaQuery().orderByDesc(Moment::getM_id);
+        if (StrUtil.isNotBlank(searchText)) {
+            query.like(Moment::getM_content, searchText);
+        }
+
+        return listMaps(query);
     }
 
 
