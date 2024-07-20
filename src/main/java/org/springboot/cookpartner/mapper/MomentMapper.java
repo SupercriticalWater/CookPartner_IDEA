@@ -18,6 +18,16 @@ public interface MomentMapper extends BaseMapper<Moment>{
     List<Map<String, Object>> findByUid(@Param("uid")String uid);
 
     @Select("select moment.*, user.u_nickname, u_url, food.f_name "+
+            "from moment, user, food where user.u_id = moment.u_id and food.f_id = moment.f_id order by m_create_time desc")
+    List<Map<String, Object>> findAll();
+
+    @Select("select moment.*, user.u_nickname, u_url, food.f_name "+
+            "from moment, user, food where user.u_id = moment.u_id and food.f_id = moment.f_id "+
+            "and moment.f_id in (select f_id from food_like where food_like.u_id = #{uid}) "+
+            "order by m_create_time desc")
+    List<Map<String, Object>> findByUserLike(@Param("uid")String uid);
+
+    @Select("select moment.*, user.u_nickname, u_url, food.f_name "+
             "from moment, user, food where moment.f_id = #{fid} and user.u_id = moment.u_id and food.f_id = moment.f_id")
     List<Map<String, Object>> findByFid(@Param("fid")int fid);
 

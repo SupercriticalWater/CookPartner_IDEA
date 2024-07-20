@@ -51,7 +51,7 @@ public class FoodService extends ServiceImpl<FoodMapper, Food>{
         return foodMapper.findFoodByType(tid);
     }
 
-    public List<Map<String, Object>> SerchFood(String searchText,Integer tid) {
+    public List<Map<String, Object>> SearchFood(String searchText,Integer tid) {
         LambdaQueryWrapper<Food> query = Wrappers.<Food>lambdaQuery().orderByDesc(Food::getF_id);
         if (StrUtil.isNotBlank(searchText)) {
             query.like(Food::getF_name, searchText).or().like(Food::getF_description,searchText).or().eq(Food::getF_id,searchText);

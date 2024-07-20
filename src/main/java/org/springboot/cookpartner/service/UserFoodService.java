@@ -40,6 +40,14 @@ public class UserFoodService {
         return userFoodMapper.getRecordNumByUid(uid);
     }
 
+    public Boolean isMade(String uid, int fid) {
+        Map<String, Object> res = userFoodMapper.findByUidAndFid(uid, fid);
+        if (res == null){
+            return false;
+        }
+        return true;
+    }
+
     //收藏
     public Boolean addRecord(String uid, int fid) {
         String ltime = DateUtil.now();

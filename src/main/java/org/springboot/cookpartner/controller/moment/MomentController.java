@@ -74,4 +74,26 @@ public class MomentController {
         message.setMessage(momentService.getNumByFood(fid));
         return message;
     }
+
+    @GetMapping("/search")
+    public Map<String,Object> searchMoment(
+            @RequestParam(required = false, defaultValue = "") String searchText) {
+        Message message = new Message();
+        message.setMessage(momentService.SerchMoment(searchText));
+        return message;
+    }
+
+    @GetMapping("/all")
+    public Map<String,Object> getAllMoment() {
+        Message message = new Message();
+        message.setMessage(momentService.findAllMoment());
+        return message;
+    }
+
+    @GetMapping("/likedfood/uid/{uid}")
+    public Map<String,Object> getLikedFoodMoment(@PathVariable String uid) {
+        Message message = new Message();
+        message.setMessage(momentService.findMomentByUserLike(uid));
+        return message;
+    }
 }
