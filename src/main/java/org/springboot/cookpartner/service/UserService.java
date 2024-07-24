@@ -1,10 +1,14 @@
 package org.springboot.cookpartner.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
+import org.springboot.cookpartner.dao.FoodRepository;
+import org.springboot.cookpartner.dao.UserRepository;
 import org.springboot.cookpartner.entity.User;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.entity.UserAvatar;
 import org.springboot.cookpartner.mapper.*;
+import org.springboot.cookpartner.node.Neo4jFood;
 import org.springboot.cookpartner.utils.JsonMessageGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,15 @@ public class UserService extends ServiceImpl<UserMapper, User>{
 
     @Autowired
     UserFoodMapper userFoodMapper;
+
+    @Autowired
+    FoodMapper foodMapper;
+
+    @Autowired
+    FoodRepository foodRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public String getOpenid(String temporaryId) {
         RestTemplate template = new RestTemplate();
@@ -63,7 +76,7 @@ public class UserService extends ServiceImpl<UserMapper, User>{
             return message;
         }
         userMapper.createWxUser(u_id);
-       // userRepository.createUser(u_id);
+        userRepository.createUser(u_id);
         Map<String, Object> userInfo = userMapper.selectById(u_id);
         userInfo.put("moment_num", momentMapper.getMomentNumByUid(u_id)); //评论数
         userInfo.put("follow_num", foodLikeMapper.getLikeNumByUid(u_id)); //收藏菜谱数
@@ -98,7 +111,7 @@ public class UserService extends ServiceImpl<UserMapper, User>{
     public Map<String, Object> sign(String u_id,String u_pwd) {
         Message message = new Message();
         if (userMapper.createUser(u_id,u_pwd) != 0) {
-           // userRepository.createUser(u_id);
+            userRepository.createUser(u_id);
             message.setMeta("SUCCESS", 200);
         } else
             message.setMeta("FAIL", 200);
@@ -126,4 +139,55 @@ public class UserService extends ServiceImpl<UserMapper, User>{
 
 
 
+    public List<Neo4jFood> getrecommendedFood(String u_id){
+        int min_len = 20;
+        List<Neo4jFood> recommendedFood = new ArrayList<>();
+        List<String> fNames = new ArrayList<>();
+        // 根据用户推荐过的菜进行推荐
+        List<Neo4jFood> recommendedFoodByRecommendation = foodRepository.getRecommendedFoodByRecommendation(u_id);
+//        System.out.println("recommendedFoodByRecommendation:"+recommendedFoodByRecommendation);
+        for (Neo4jFood food : recommendedFoodByRecommendation) {
+            if (recommendedFood.size() < min_len) {
+                recommendedFood.add(food);
+                fNames.add(food.getFName());
+            }
+        }
+
+        // 根据用户做过的菜进行推荐
+        if (recommendedFood.size() < min_len) {
+            List<Neo4jFood> recommendedFoodByCookedFood = foodRepository.getRecommendedFoodByCookedFood(u_id);
+            for (Neo4jFood food : recommendedFoodByCookedFood) {
+                if (!fNames.contains(food.getFName()) && recommendedFood.size() < min_len) {
+                    recommendedFood.add(food);
+                    fNames.add(food.getFName());
+                }
+            }
+        }
+
+
+        // 根据用户做过的菜品类别进行推荐
+        if (recommendedFood.size() < min_len) {
+            List<Map<String, Object>> food = foodMapper.recommendByCategory(u_id);
+            for (Map<String, Object> f : food) {
+                Neo4jFood neo4jFood = Neo4jFood.Map2Neo4jFood(f);
+                if (!fNames.contains(neo4jFood.getFName()) && recommendedFood.size() < min_len) {
+                    recommendedFood.add(neo4jFood);
+                    fNames.add(neo4jFood.getFName());
+                }
+            }
+        }
+
+        // 根据热门菜谱进行推荐
+        if (recommendedFood.size() < min_len) {
+            List<Neo4jFood> f = foodRepository.selectHotFood();
+            for (Neo4jFood food : f) {
+                if (!fNames.contains(food.getFName()) && recommendedFood.size() < min_len) {
+                    recommendedFood.add(food);
+                    fNames.add(food.getFName());
+                }
+            }
+        }
+        return recommendedFood;
+
+    }
 }

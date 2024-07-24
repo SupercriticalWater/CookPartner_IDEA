@@ -1,5 +1,8 @@
 package org.springboot.cookpartner.controller.user;
 
+import org.springboot.cookpartner.dao.FoodRepository;
+import org.springboot.cookpartner.entity.Food;
+import org.springboot.cookpartner.node.Neo4jFood;
 import org.springboot.cookpartner.utils.JsonMessageGetter;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.controller.message.Message;
@@ -86,6 +89,22 @@ public class UserController {
         } catch (Exception ignore) {
             System.out.println("error");
         }
+    }
+
+
+    //智能推荐
+    @GetMapping("recommendedFood/get")
+    public Map<String, Object> getRecommendedFood(@RequestParam("openid") String openid){
+        Message message = new Message();
+        List<Neo4jFood> recommendedFood = userService.getrecommendedFood(openid);
+        Collections.shuffle(recommendedFood);
+        System.out.println(recommendedFood.size());
+        recommendedFood = recommendedFood.subList(0, Math.min(recommendedFood.size(),6));
+//        for(Neo4jFood food :recommendedFood){
+//            food.setTh_url(foodMapper.selectThUrlByNo(food.getNo()));
+//        }
+        message.setMessage(recommendedFood);
+        return message;
     }
 
 }

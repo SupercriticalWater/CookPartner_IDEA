@@ -54,6 +54,23 @@ public interface FoodMapper extends BaseMapper<Food> {
     boolean updateNumMake(@Param("f_id") int fid,
                           @Param("num_make") int num_make);
 
-
+    @Select("select f_id,f_name,f_pic,f_th_pic,create_time,f_category,f_description,num_make,num_like,f_score,f_recommend " +
+            "   from (select food.f_id,f_name,f_pic,f_th_pic,create_time,f_category,f_description,num_make,num_like,f_score,f_recommend," +
+            "   count(m_recommendation) as r_num" +
+            "       from moment " +
+            "       join food on moment.f_id = food.f_id " +
+            "       join (select food.f_category as category, count(f_category) as num " +
+            "               from user_food " +
+            "               join food on user_food.f_id = food.f_id " +
+            "               where u_id = #{u_id} " +
+            "               group by food.f_category " +
+            "               order by num desc " +
+            "               limit 1) as cn on food.f_category = cn.category " +
+            "       where m_recommendation = 1.0 " +
+            "       and food.f_id not in (select f_id from user_food where u_id = #{u_id}) " +
+            "    group by f_id " +
+            "    order by r_num desc) as `c.*rn` " +
+            "limit 30 ")
+    List<Map<String, Object>> recommendByCategory(@Param("u_id") String u_id);
 
 }

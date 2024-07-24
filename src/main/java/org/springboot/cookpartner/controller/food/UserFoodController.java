@@ -1,7 +1,9 @@
 package org.springboot.cookpartner.controller.food;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springboot.cookpartner.common.Result;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.controller.message.Message;
+import org.springboot.cookpartner.dao.UserRepository;
 import org.springboot.cookpartner.service.FoodLikeService;
 import org.springboot.cookpartner.service.UserFoodService;
 import org.springboot.cookpartner.service.FoodService;
@@ -16,7 +18,10 @@ public class UserFoodController {
     @Resource
     private UserFoodService userFoodService;
 
-    //获取某个用户收藏的所有菜谱
+    @Resource
+    private UserRepository userRepository;
+
+    //获取某个用户制作过的所有菜谱
     @GetMapping("/user/{uid}")
     public Map<String,Object> findMakeRecordByUser(@PathVariable String uid) {
         Message message = new Message();
@@ -24,20 +29,22 @@ public class UserFoodController {
         return message;
     }
 
-    //收藏菜谱
+    //添加制作过的菜谱
     @GetMapping("/addmake")
     public Map<String,Object> AddMake(@RequestParam("uid") String uid,@RequestParam("fid") int fid) {
         Message message = new Message();
         Boolean res = userFoodService.addRecord(uid, fid);
-        message.setMessage(res);
-        if(res) {
+        Boolean neo4jRes = userRepository.updateUserCookedFood(uid, fid);
+        Map<String, Boolean> resultMap = new HashMap<>();
+        resultMap.put("databaseResult", res);
+        resultMap.put("neo4jResult", neo4jRes);
+        message.setMessage(resultMap);
+        if(res && neo4jRes) {
             message.setMeta("添加成功", 200);
         }
         else {
             message.setMeta("添加失败", 400);
         }
-
-
         return message;
     }
 

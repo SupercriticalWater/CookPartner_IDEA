@@ -1,23 +1,20 @@
 package org.springboot.cookpartner.service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springboot.cookpartner.dao.UserRepository;
 import org.springboot.cookpartner.entity.Moment;
-import org.springboot.cookpartner.entity.Food;
-import org.springboot.cookpartner.mapper.FoodLikeMapper;
 import org.springboot.cookpartner.mapper.MomentMapper;
 import org.springboot.cookpartner.mapper.FoodMapper;
 
+import org.springboot.cookpartner.utils.momentRating.MomentRating;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.date.DateUtil;
@@ -33,20 +30,40 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
     @Resource
     private FoodMapper foodMapper;
 
+    @Resource
+    private UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(MomentService.class);
 
     public Boolean addMoment(String uid, int fid, String content) {
         String mtime = DateUtil.now();
         try {
             // 添加评论内容
-            int result = momentMapper.AddMoment(uid,fid,content,mtime);
-             return true;
+            float mrecommendation = Float.parseFloat(MomentRating.rating(content));
+            int result = momentMapper.AddMoment(uid,fid,content, mrecommendation, mtime);
+            if (mrecommendation == 1.0){
+                userRepository.updateUserRecommendFood(uid, fid);
+            }
+            return true;
         } catch (DataAccessException e) {
             // 处理数据库操作异常，可能是触发器引发的唯一性约束冲突
             logger.error("Database error while adding moment: {}", e.getMessage());
             return false;
         }
     }
+
+    public boolean updateRelationUser2Food(String u_id, int f_id, boolean recommend) {
+        try {
+            if (recommend)
+                userRepository.updateUserRecommendFood(u_id, f_id);
+//            else
+//                userRepository.updateUserUnlikeCourse(u_id, c_no);
+            return true;
+        }catch (DataAccessException e){
+            logger.error("Database error while adding moment: {}", e.getMessage());
+            return false;
+        }
+    }
+
 
     public int getNumByUser(String uid) {
         return momentMapper.getMomentNumByUid(uid);
@@ -78,8 +95,13 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
 
     public Boolean deleteMoment(int mid) {
         try {
-            // 添加评论内容
-            return momentMapper.DeleteMoment(mid);
+            // 删除评论内容
+            Map<String, Object> res =  momentMapper.findMomentByMid(mid);
+            if((Float)res.get("m_recommendation")== 1.0) {
+                userRepository.deleteUserRecommendFood((String) res.get("u_id"), (Long) res.get("f_id"));
+            }
+            momentMapper.DeleteMoment(mid);
+            return  true;
         } catch (DataAccessException e) {
             // 处理数据库操作异常，可能是触发器引发的唯一性约束冲突
             logger.error("Database error while deleting moment: {}", e.getMessage());

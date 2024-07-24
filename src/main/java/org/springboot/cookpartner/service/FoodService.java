@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.springboot.cookpartner.dao.FoodRepository;
 import org.springboot.cookpartner.entity.Food;
 import org.springboot.cookpartner.mapper.FoodMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -15,6 +17,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springboot.cookpartner.node.Neo4jFood;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.config.Neo4jCdiExtension;
 import org.springframework.stereotype.Service;
 import cn.hutool.core.util.StrUtil;
 
@@ -22,6 +27,9 @@ import cn.hutool.core.util.StrUtil;
 public class FoodService extends ServiceImpl<FoodMapper, Food>{
     @Resource
     private FoodMapper foodMapper;
+
+    @Autowired
+    FoodRepository foodRepository;
 
     public List<Map<String, Object>> findAllFoods() {
         return foodMapper.findAllFoods();
@@ -62,5 +70,8 @@ public class FoodService extends ServiceImpl<FoodMapper, Food>{
         return listMaps(query);
     }
 
+    public List<Neo4jFood> selectHotFood(){
+        return foodRepository.selectHotFood();
+    }
 
 }

@@ -3,6 +3,7 @@ package org.springboot.cookpartner.controller.food;
 import org.springboot.cookpartner.common.Result;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.controller.message.Message;
+import org.springboot.cookpartner.node.Neo4jFood;
 import org.springboot.cookpartner.service.FoodLikeService;
 import org.springboot.cookpartner.service.UserFoodService;
 import org.springboot.cookpartner.service.FoodService;
@@ -96,6 +97,16 @@ public class FoodController {
         return message;
     }
 
+    //获取随机推荐菜谱
+    @GetMapping("/random")
+    public Map<String, Object> getRandomFood(){
+        Message message = new Message();
+        Random rand = new Random();
+        List<Neo4jFood> hotFood = foodService.selectHotFood();
+        Neo4jFood randomFood = hotFood.get(rand.nextInt(hotFood.size()));
+        message.setMessage(randomFood.getFId());
+        return message;
+    }
 
 
 }

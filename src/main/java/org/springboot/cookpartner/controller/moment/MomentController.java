@@ -3,6 +3,7 @@ package org.springboot.cookpartner.controller.moment;
 import org.springboot.cookpartner.common.Result;
 import org.springboot.cookpartner.config.MyConfig;
 import org.springboot.cookpartner.controller.message.Message;
+import org.springboot.cookpartner.entity.Moment;
 import org.springboot.cookpartner.service.FoodLikeService;
 import org.springboot.cookpartner.service.MomentService;
 import org.springboot.cookpartner.service.FoodService;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/moment")
 public class MomentController {
+
     @Resource
     private MomentService momentService;
 
