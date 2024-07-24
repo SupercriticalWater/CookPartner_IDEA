@@ -34,7 +34,7 @@ public class UserFoodController {
     public Map<String,Object> AddMake(@RequestParam("uid") String uid,@RequestParam("fid") int fid) {
         Message message = new Message();
         Boolean res = userFoodService.addRecord(uid, fid);
-        Boolean neo4jRes = userRepository.updateUserCookedFood(uid, fid);
+        Boolean neo4jRes = userRepository.updateUserCookedFood(uid, Integer.toString(fid));
         Map<String, Boolean> resultMap = new HashMap<>();
         resultMap.put("databaseResult", res);
         resultMap.put("neo4jResult", neo4jRes);

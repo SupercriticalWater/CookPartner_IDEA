@@ -99,7 +99,7 @@ public class UserController {
         List<Neo4jFood> recommendedFood = userService.getrecommendedFood(openid);
         Collections.shuffle(recommendedFood);
         System.out.println(recommendedFood.size());
-        recommendedFood = recommendedFood.subList(0, Math.min(recommendedFood.size(),6));
+        recommendedFood = recommendedFood.subList(0, Math.min(recommendedFood.size(),20));
 //        for(Neo4jFood food :recommendedFood){
 //            food.setTh_url(foodMapper.selectThUrlByNo(food.getNo()));
 //        }

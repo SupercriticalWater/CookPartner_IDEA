@@ -17,7 +17,7 @@ import java.util.List;
 public interface FoodRepository extends Neo4jRepository<Neo4jFood, Long> {
 
     @Query("MERGE(:food{f_id:$f_id,f_name:$f_name,f_pic:$f_pic,f_th_pic:$f_th_pic,create_time:$create_time,f_category:$f_category,f_description:$f_description,num_make:$num_make,num_like:$num_like,f_score:$f_score})")
-    void createFood(@Param(value = "f_id") Long fId,
+    void createFood(@Param(value = "f_id") String fId,
                     @Param(value = "f_name") String fName,
                     @Param(value = "f_pic") String fPic,
                     @Param(value = "f_th_pic") String fThPic,
@@ -26,9 +26,9 @@ public interface FoodRepository extends Neo4jRepository<Neo4jFood, Long> {
                     @Param(value = "create_time") String createTime,
                     @Param(value = "f_category") String fCategory,
                     @Param(value = "f_description") String fDescription,
-                    @Param(value = "num_make") Long numMake,
-                    @Param(value = "num_like") Long numLike,
-                    @Param(value = "f_score") Integer fScore
+                    @Param(value = "num_make") String numMake,
+                    @Param(value = "num_like") String numLike,
+                    @Param(value = "f_score") String fScore
     );
 
 
@@ -43,10 +43,10 @@ public interface FoodRepository extends Neo4jRepository<Neo4jFood, Long> {
             "OPTIONAL MATCH (other)-[:RECOMMEND]->(otherFavour:food)  " +
             "WHERE NOT otherFavour IN myFavour  " +
             "WITH i, other, intersection, count(otherFavour) AS recommendationNum,myFavourNum,otherFavour as recommendation  " +
-            "where intersection/toFloat(recommendationNum+myFavourNum) > 0.2  " +
+            "where intersection/toFloat(recommendationNum+myFavourNum) > 0.2 " +
             "with recommendation,count(recommendation) as r_num " +
             "return recommendation as food " +
-            "order by r_num desc limit 5")
+            "order by r_num desc limit 8")
     List<Neo4jFood> getRecommendedFoodByRecommendation(@Param(value = "openid") String openid);
 
     //基于用户做过的菜进行推荐
@@ -63,7 +63,7 @@ public interface FoodRepository extends Neo4jRepository<Neo4jFood, Long> {
             "WHERE intersection/toFloat(recommendationNum + myFavourNum) > 0.2 " +
             "WITH recommendation, count(recommendation) as r_num " +
             "RETURN recommendation as food " +
-            "ORDER BY r_num DESC LIMIT 5")
+            "ORDER BY r_num DESC LIMIT 8")
     List<Neo4jFood> getRecommendedFoodByCookedFood(@Param(value = "openid") String openid);
 
     // 获取热门菜谱

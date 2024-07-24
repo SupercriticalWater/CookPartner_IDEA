@@ -25,7 +25,7 @@ public class Neo4jFood {
     private Long id;
 
     @Property("f_id")
-    private Long fId;
+    private String fId;
 
     @Property("f_name")
     private String fName;
@@ -48,18 +48,18 @@ public class Neo4jFood {
     private String fDescription;
 
     @Property("num_make")
-    private Long numMake;
+    private String numMake;
 
     @Property("num_like")
-    private Long numLike;
+    private String numLike;
 
     @Property("f_score")
-    private Integer fScore;
+    private String fScore;
 
     public static Neo4jFood Map2Neo4jFood(Map<String, Object> food) {
         Neo4jFood neo4jFood = new Neo4jFood();
         if (food.get("f_id") != null)
-            neo4jFood.fId = (Long) food.get("f_id");
+            neo4jFood.fId = food.get("f_id").toString();
         if (food.get("f_name") != null)
             neo4jFood.fName = food.get("f_name").toString();
         if (food.get("f_pic") != null)
@@ -73,11 +73,11 @@ public class Neo4jFood {
         if (food.get("f_description") != null)
             neo4jFood.fDescription = food.get("f_description").toString();
         if (food.get("num_make") != null)
-            neo4jFood.numMake = (Long) food.get("num_make");
+            neo4jFood.numMake = food.get("num_make").toString();
         if (food.get("num_like") != null)
-            neo4jFood.numLike = (Long) food.get("num_like");
+            neo4jFood.numLike = food.get("num_like").toString();
         if (food.get("f_score") != null)
-            neo4jFood.fScore = (Integer) food.get("f_score");
+            neo4jFood.fScore = food.get("f_score").toString();
 
         return neo4jFood;
     }

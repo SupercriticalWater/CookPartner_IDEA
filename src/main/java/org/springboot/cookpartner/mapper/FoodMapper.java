@@ -70,7 +70,7 @@ public interface FoodMapper extends BaseMapper<Food> {
             "       and food.f_id not in (select f_id from user_food where u_id = #{u_id}) " +
             "    group by f_id " +
             "    order by r_num desc) as `c.*rn` " +
-            "limit 30 ")
+            "limit 15 ")
     List<Map<String, Object>> recommendByCategory(@Param("u_id") String u_id);
 
 }

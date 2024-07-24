@@ -41,7 +41,7 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
             float mrecommendation = Float.parseFloat(MomentRating.rating(content));
             int result = momentMapper.AddMoment(uid,fid,content, mrecommendation, mtime);
             if (mrecommendation == 1.0){
-                userRepository.updateUserRecommendFood(uid, fid);
+                userRepository.updateUserRecommendFood(uid, Integer.toString(fid));
             }
             return true;
         } catch (DataAccessException e) {
@@ -51,7 +51,7 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
         }
     }
 
-    public boolean updateRelationUser2Food(String u_id, int f_id, boolean recommend) {
+    public boolean updateRelationUser2Food(String u_id, String f_id, boolean recommend) {
         try {
             if (recommend)
                 userRepository.updateUserRecommendFood(u_id, f_id);
@@ -98,7 +98,7 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
             // 删除评论内容
             Map<String, Object> res =  momentMapper.findMomentByMid(mid);
             if((Float)res.get("m_recommendation")== 1.0) {
-                userRepository.deleteUserRecommendFood((String) res.get("u_id"), (Long) res.get("f_id"));
+                userRepository.deleteUserRecommendFood((String) res.get("u_id"), (String) res.get("f_id"));
             }
             momentMapper.DeleteMoment(mid);
             return  true;
