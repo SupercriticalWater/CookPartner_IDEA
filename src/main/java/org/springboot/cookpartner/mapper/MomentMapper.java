@@ -45,6 +45,15 @@ public interface MomentMapper extends BaseMapper<Moment>{
     @Select("select count(*) from moment where f_id = #{fid}")
     int getMomentNumByFid(@Param("fid")int fid);
 
+    @Update("update moment " +
+            "set m_like_num = m_like_num + 1 " +
+            "where m_id = #{m_id}")
+    boolean addLikeNum(@Param("m_id") int m_id);
+    @Update("update moment " +
+            "set m_browse_num = m_browse_num + 1 " +
+            "where m_id = #{m_id}")
+    boolean addBrowseNum(@Param("m_id") int m_id);
+
 //    void setRecommendationInMapper(Float recommendationInMapper);
 
 }

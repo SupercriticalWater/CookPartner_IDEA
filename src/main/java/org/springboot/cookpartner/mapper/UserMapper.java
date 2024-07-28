@@ -58,14 +58,10 @@ public interface UserMapper extends BaseMapper<User> {
                          @Param("url") String url);
 
     @Update("update user " +
-            "set u_level = #{level} " +
-            "where u_id=#{u_id}")
-    boolean updateLevel(@Param("u_id") String uId,
-                         @Param("level") Integer uLevel);
+            "set u_level = #{level}, u_score = #{score} " +
+            "where u_id=#{uid}")
+    boolean updateScoreAndLevel(@Param("uid") String uid,
+                         @Param("score") Integer score, @Param("level") Integer level);
 
-    @Update("update user " +
-            "set u_score = #{score} " +
-            "where u_id=#{u_id}")
-    boolean updateScore(@Param("u_id") String uId,
-                        @Param("score") Integer uScore);
+
 }

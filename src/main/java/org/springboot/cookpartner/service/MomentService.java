@@ -86,6 +86,7 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
     }
 
     public Map<String, Object> findMomentByMid(int mid) {
+
         return momentMapper.findMomentByMid(mid);
     }
 
