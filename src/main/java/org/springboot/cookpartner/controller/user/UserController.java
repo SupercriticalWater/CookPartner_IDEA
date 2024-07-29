@@ -53,6 +53,13 @@ public class UserController {
                                     @RequestParam("user_pwd") String password) {
         return userService.sign(openid, password);
     }
+    //获取用户信息
+    @GetMapping("/info")
+    public Map<String, Object> GetUserByUid(@RequestParam("openid") String openid) {
+        Message message = new Message();
+        message.setMessage(userService.findUserByUid(openid));
+        return message;
+    }
     //更新昵称
     @GetMapping("/updateNickname")
     public boolean updateNickname(@RequestParam("openid") String u_id,

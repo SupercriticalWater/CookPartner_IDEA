@@ -98,4 +98,18 @@ public class MomentController {
         message.setMessage(momentService.findMomentByUserLike(uid));
         return message;
     }
+
+    @GetMapping("/addlike")
+    public Map<String,Object> addLike(@RequestParam("mid") int mid) {
+        Message message = new Message();
+        message.setMessage(momentService.LikeMoment(mid));
+        return message;
+    }
+
+    @GetMapping("/addview")
+    public Map<String,Object> addView(@RequestParam("mid") int mid) {
+        Message message = new Message();
+        message.setMessage(momentService.ViewMoment(mid));
+        return message;
+    }
 }

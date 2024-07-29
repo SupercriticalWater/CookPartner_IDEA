@@ -72,6 +72,13 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
     public int getNumByFood(int fid) {
         return momentMapper.getMomentNumByFid(fid);
     }
+    public Boolean LikeMoment(int mid) {
+        return momentMapper.addLikeNum(mid);
+    }
+
+    public Boolean ViewMoment(int mid) {
+        return momentMapper.addBrowseNum(mid);
+    }
 
     public List<Map<String, Object>> findMomentByUser(String uid) {
         return momentMapper.findByUid(uid);

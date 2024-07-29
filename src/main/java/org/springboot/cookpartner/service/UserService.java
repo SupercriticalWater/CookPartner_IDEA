@@ -117,7 +117,9 @@ public class UserService extends ServiceImpl<UserMapper, User>{
             message.setMeta("FAIL", 200);
         return message;
     }
-
+    public Map<String, Object> findUserByUid(String u_id) {
+        return userMapper.selectById(u_id);
+    }
     public boolean updateNickname(String u_id, String nickName) {
         return userMapper.updateNickname(u_id, nickName);
     }
