@@ -22,6 +22,10 @@ public interface UserMapper extends BaseMapper<User> {
     Map<String, Object> selectById(@Param("u_id") String u_id);
 
     @Select("select *" +
+            "from user order by u_score desc limit 20")
+    List<Map<String, Object>> selectTopUsers();
+
+    @Select("select *" +
             "from user where u_id=#{u_id} and u_pwd = #{u_pwd}")
     Map<String, Object> selectByIdAndPwd(@Param("u_id") String u_id, @Param("u_pwd") String u_pwd);
 

@@ -60,6 +60,14 @@ public class UserController {
         message.setMessage(userService.findUserByUid(openid));
         return message;
     }
+
+    //获取积分排名前20的用户
+    @GetMapping("/topusers")
+    public Map<String, Object> GetTopUsers() {
+        Message message = new Message();
+        message.setMessage(userService.findTopUsers());
+        return message;
+    }
     //更新昵称
     @GetMapping("/updateNickname")
     public boolean updateNickname(@RequestParam("openid") String u_id,
