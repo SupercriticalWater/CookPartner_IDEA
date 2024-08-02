@@ -105,7 +105,7 @@ public class MomentService extends ServiceImpl<MomentMapper, Moment> {
         try {
             // 删除评论内容
             Map<String, Object> res =  momentMapper.findMomentByMid(mid);
-            if((Float)res.get("m_recommendation")== 1.0) {
+            if(res.get("m_recommendation")== "1.0") {
                 userRepository.deleteUserRecommendFood((String) res.get("u_id"), (String) res.get("f_id"));
             }
             momentMapper.DeleteMoment(mid);

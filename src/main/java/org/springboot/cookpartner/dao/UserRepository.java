@@ -11,7 +11,7 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     void createUser(@Param(value = "openid") String id);
 
     @Query("match (u:user),(f:food) where u.openid = $u_id and f.f_id = $f_id " +
-            "merge (u)-[r:RECOMMEND]->(f) " +
+            "merge (u)-[r:RECOMMEND{grade:'1.0'}]->(f) " +
             "return r")
     void updateUserRecommendFood(@Param("u_id") String u_id,
                                   @Param("f_id") String f_id);
